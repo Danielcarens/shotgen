@@ -1,4 +1,4 @@
-# Field Test Data Generator
+#Debug Test Data Generator
 
 A free web tool for generating randomized compaction test field data. No installation, no server, no account required — just open the link and use it. Used for debugging purposes on Excel files. Use by your own risk.
 
