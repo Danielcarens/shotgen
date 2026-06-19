@@ -2,86 +2,94 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Field Test Data Generator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Datos de Campo</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f0f2f5;color:#222;padding:20px}
+body{font-family:Arial,sans-serif;background:#f0f2f5;color:#222;padding:16px}
 h1{font-size:1.4em;margin-bottom:18px;color:#1a3a5c}
-.card{background:#fff;border-radius:8px;padding:18px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.card{background:#fff;border-radius:8px;padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
 .card h2{font-size:1em;color:#1a3a5c;margin-bottom:12px;border-bottom:1px solid #e0e4ea;padding-bottom:6px}
-.mat-toggle{display:flex;gap:8px;margin-bottom:16px}
-.mat-btn{padding:6px 18px;border:2px solid #1a3a5c;border-radius:4px;cursor:pointer;font-size:.9em;background:#fff;color:#1a3a5c;transition:.15s}
+.mat-toggle{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.mat-btn{padding:10px 22px;border:2px solid #1a3a5c;border-radius:4px;cursor:pointer;font-size:1em;background:#fff;color:#1a3a5c;transition:.15s;touch-action:manipulation}
 .mat-btn.active{background:#1a3a5c;color:#fff}
 .mat-section{display:none}
 .mat-section.visible{display:block}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-label{display:block;font-size:.82em;color:#555;margin-bottom:3px}
-input[type=number]{width:100%;padding:6px 8px;border:1px solid #ccc;border-radius:4px;font-size:.9em}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-size:.9em;color:#555;margin-bottom:4px}
+input[type=number]{width:100%;padding:10px 10px;border:1px solid #ccc;border-radius:4px;font-size:1em}
 input:focus{outline:none;border-color:#1a3a5c}
-.slider-row{display:flex;align-items:center;gap:10px;margin-top:4px}
-input[type=range]{flex:1}
-.slider-val{min-width:30px;font-size:.85em;color:#1a3a5c;font-weight:bold}
-.global-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.slider-row{display:flex;align-items:center;gap:10px;margin-top:6px}
+input[type=range]{flex:1;height:28px}
+.slider-val{min-width:32px;font-size:.95em;color:#1a3a5c;font-weight:bold}
+.global-grid{display:grid;grid-template-columns:1fr;gap:16px}
 .field{display:flex;flex-direction:column}
-.note{font-size:.75em;color:#888;margin-top:3px}
-button#generateBtn{display:block;width:100%;padding:12px;background:#1a3a5c;color:#fff;font-size:1.05em;border:none;border-radius:6px;cursor:pointer;margin-top:6px}
+.note{font-size:.78em;color:#888;margin-top:4px}
+button#generateBtn{display:block;width:100%;padding:16px;background:#1a3a5c;color:#fff;font-size:1.1em;border:none;border-radius:6px;cursor:pointer;margin-top:6px;touch-action:manipulation}
 button#generateBtn:hover{background:#24527a}
 button#generateBtn:disabled{background:#aaa;cursor:not-allowed}
-#status{margin-top:10px;font-size:.88em;color:#333;min-height:20px}
+#status{margin-top:10px;font-size:.92em;color:#333;min-height:20px}
 .error{color:#c00}.success{color:#090}
 hr{border:none;border-top:1px solid #e0e4ea;margin:12px 0}
+@media(min-width:600px){
+  .grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+  .global-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .mat-btn{padding:6px 18px;font-size:.9em}
+  input[type=number]{padding:6px 8px;font-size:.9em}
+  button#generateBtn{padding:12px;font-size:1.05em}
+}
 </style>
 </head>
 <body>
-<h1>Field Test Data Generator</h1>
+<h1>Generador de Datos de Campo</h1>
 <div class="card">
-<h2>Materials</h2>
+<h2>Materiales</h2>
 <div class="mat-toggle">
 <button class="mat-btn active" onclick="toggleMat(1)">Mat. 1</button>
 <button class="mat-btn" onclick="toggleMat(2)">Mat. 2</button>
 <button class="mat-btn" onclick="toggleMat(3)">Mat. 3</button>
 </div>
 <div class="mat-section visible" id="mat1">
-<h2>Material 1 Parameters</h2>
+<h2>Parámetros - Material 1</h2>
 <div class="grid">
-<div><label>Optimum Moisture (%)</label><input type="number" id="m1_optMoist" value="10" step="0.1"></div>
-<div><label>Max Dry Weight (pcf)</label><input type="number" id="m1_maxWt" value="100" step="0.1"></div>
-<div><label>Moisture Lower Limit (offset below optimum)</label><input type="number" id="m1_mLow" value="2" step="1" min="1"><div class="note">e.g. 2 means lower bound = Optimum − 2%</div></div>
-<div><label>Moisture Upper Limit (offset above optimum)</label><input type="number" id="m1_mHigh" value="2" step="1" min="1"><div class="note">e.g. 2 means upper bound = Optimum + 2%</div></div>
-<div><label>Compaction Lower Limit (%)</label><input type="number" id="m1_cLow" value="95" step="1"><div class="note">% of Max Weight</div></div>
-<div><label>Compaction Upper Limit (%)</label><input type="number" id="m1_cHigh" value="100" step="1"><div class="note">% of Max Weight</div></div>
+<div><label>Humedad Óptima (%)</label><input type="number" id="m1_optMoist" value="10" step="0.1"></div>
+<div><label>Densidad Seca Máxima (pcf)</label><input type="number" id="m1_maxWt" value="100" step="0.1"></div>
+<div><label>Límite Inferior de Humedad (resta a la óptima)</label><input type="number" id="m1_mLow" value="2" step="1" min="1"><div class="note">Ej. 2 significa límite inferior = Óptima − 2%</div></div>
+<div><label>Límite Superior de Humedad (suma a la óptima)</label><input type="number" id="m1_mHigh" value="2" step="1" min="1"><div class="note">Ej. 2 significa límite superior = Óptima + 2%</div></div>
+<div><label>Límite Inferior de Compactación (%)</label><input type="number" id="m1_cLow" value="95" step="1"><div class="note">% de la Densidad Máxima</div></div>
+<div><label>Límite Superior de Compactación (%)</label><input type="number" id="m1_cHigh" value="100" step="1"><div class="note">% de la Densidad Máxima</div></div>
 </div></div>
 <div class="mat-section" id="mat2">
-<hr><h2>Material 2 Parameters</h2>
+<hr><h2>Parámetros - Material 2</h2>
 <div class="grid">
-<div><label>Optimum Moisture (%)</label><input type="number" id="m2_optMoist" value="11" step="0.1"></div>
-<div><label>Max Dry Weight (pcf)</label><input type="number" id="m2_maxWt" value="110" step="0.1"></div>
-<div><label>Moisture Lower Limit (offset below optimum)</label><input type="number" id="m2_mLow" value="2" step="1" min="1"></div>
-<div><label>Moisture Upper Limit (offset above optimum)</label><input type="number" id="m2_mHigh" value="2" step="1" min="1"></div>
-<div><label>Compaction Lower Limit (%)</label><input type="number" id="m2_cLow" value="95" step="1"></div>
-<div><label>Compaction Upper Limit (%)</label><input type="number" id="m2_cHigh" value="100" step="1"></div>
+<div><label>Humedad Óptima (%)</label><input type="number" id="m2_optMoist" value="11" step="0.1"></div>
+<div><label>Densidad Seca Máxima (pcf)</label><input type="number" id="m2_maxWt" value="110" step="0.1"></div>
+<div><label>Límite Inferior de Humedad (resta a la óptima)</label><input type="number" id="m2_mLow" value="2" step="1" min="1"></div>
+<div><label>Límite Superior de Humedad (suma a la óptima)</label><input type="number" id="m2_mHigh" value="2" step="1" min="1"></div>
+<div><label>Límite Inferior de Compactación (%)</label><input type="number" id="m2_cLow" value="95" step="1"></div>
+<div><label>Límite Superior de Compactación (%)</label><input type="number" id="m2_cHigh" value="100" step="1"></div>
 </div></div>
 <div class="mat-section" id="mat3">
-<hr><h2>Material 3 Parameters</h2>
+<hr><h2>Parámetros - Material 3</h2>
 <div class="grid">
-<div><label>Optimum Moisture (%)</label><input type="number" id="m3_optMoist" value="12" step="0.1"></div>
-<div><label>Max Dry Weight (pcf)</label><input type="number" id="m3_maxWt" value="120" step="0.1"></div>
-<div><label>Moisture Lower Limit (offset below optimum)</label><input type="number" id="m3_mLow" value="2" step="1" min="1"></div>
-<div><label>Moisture Upper Limit (offset above optimum)</label><input type="number" id="m3_mHigh" value="2" step="1" min="1"></div>
-<div><label>Compaction Lower Limit (%)</label><input type="number" id="m3_cLow" value="95" step="1"></div>
-<div><label>Compaction Upper Limit (%)</label><input type="number" id="m3_cHigh" value="100" step="1"></div>
+<div><label>Humedad Óptima (%)</label><input type="number" id="m3_optMoist" value="12" step="0.1"></div>
+<div><label>Densidad Seca Máxima (pcf)</label><input type="number" id="m3_maxWt" value="120" step="0.1"></div>
+<div><label>Límite Inferior de Humedad (resta a la óptima)</label><input type="number" id="m3_mLow" value="2" step="1" min="1"></div>
+<div><label>Límite Superior de Humedad (suma a la óptima)</label><input type="number" id="m3_mHigh" value="2" step="1" min="1"></div>
+<div><label>Límite Inferior de Compactación (%)</label><input type="number" id="m3_cLow" value="95" step="1"></div>
+<div><label>Límite Superior de Compactación (%)</label><input type="number" id="m3_cHigh" value="100" step="1"></div>
 </div></div>
 </div>
 <div class="card">
-<h2>Global Settings</h2>
+<h2>Configuración General</h2>
 <div class="global-grid">
-<div class="field"><label>Number of Data Rows</label><input type="number" id="numRows" value="20" min="1" max="363"><div class="note">Max 363</div></div>
-<div class="field"><label>Weight Tightness</label><div class="slider-row"><input type="range" id="wTightness" min="0.5" max="3" step="0.1" value="1" oninput="document.getElementById('wTVal').textContent=this.value"><span class="slider-val" id="wTVal">1</span></div><div class="note">Higher = tighter clustering within compaction limits</div></div>
-<div class="field"><label>Moisture Tightness</label><div class="slider-row"><input type="range" id="mTightness" min="0.5" max="3" step="0.1" value="1" oninput="document.getElementById('mTVal').textContent=this.value"><span class="slider-val" id="mTVal">1</span></div><div class="note">Higher = tighter clustering within moisture limits</div></div>
+<div class="field"><label>Número de Filas de Datos</label><input type="number" id="numRows" value="20" min="1" max="363"><div class="note">Máx. 363</div></div>
+<div class="field"><label>Tolerancia de Densidad</label><div class="slider-row"><input type="range" id="wTightness" min="0.5" max="3" step="0.1" value="1" oninput="document.getElementById('wTVal').textContent=this.value"><span class="slider-val" id="wTVal">1</span></div><div class="note">Mayor = valores más concentrados dentro de los límites de compactación</div></div>
+<div class="field"><label>Tolerancia de Humedad</label><div class="slider-row"><input type="range" id="mTightness" min="0.5" max="3" step="0.1" value="1" oninput="document.getElementById('mTVal').textContent=this.value"><span class="slider-val" id="mTVal">1</span></div><div class="note">Mayor = valores más concentrados dentro de los límites de humedad</div></div>
 </div>
 </div>
 <div class="card">
-<button id="generateBtn" onclick="handleGenerate()">Generate &amp; Download Excel</button>
+<button id="generateBtn" onclick="handleGenerate()">Generar y Descargar Excel</button>
 <div id="status"></div>
 </div>
 <div class="card" style="text-align:center;font-size:.8em;color:#888;padding:14px 18px">
@@ -118,124 +126,153 @@ function generateData(mat,numRows,wT,mT){
   const wLow=mat.maxWeight*mat.compLow/100;
   const wHigh=Math.min(mat.maxWeight*mat.compHigh/100,mat.maxWeight*0.994);
   const wRange=Math.max(wHigh-wLow,0.1);
-  const wMean=wLow+wRange*0.55;
-  const wStd=wRange/(4*wT);
   const mLow=mat.optimum+mat.moistLowOff;
   const mHigh=mat.optimum+mat.moistHighOff;
   const mRange=Math.max(mHigh-mLow,0.1);
-  const mMean=mLow+mRange*0.45;
-  const mStd=mRange/(3*mT);
+  const clampW=v=>Math.max(wLow,Math.min(wHigh,v));
+  const clampM=v=>Math.max(mLow,Math.min(mHigh,v));
+  // Triangular distribution: independent sampling, no autocorrelation
+  function tri(a,b,c){
+    if(b-a<0.001)return a;
+    const cc=Math.max(a+0.0001,Math.min(b-0.0001,c));
+    const u=Math.random(),f=(cc-a)/(b-a);
+    return u<f?a+Math.sqrt(u*(b-a)*(cc-a)):b-Math.sqrt((1-u)*(b-a)*(b-cc));
+  }
+  // tightness scales the effective triangle base around the mode
+  const wMo=wLow+wRange*0.60,wSp=wRange/wT;
+  const wA=Math.max(wLow,wMo-wSp*0.60),wB=Math.min(wHigh,wMo+wSp*0.40);
+  const mMo=mLow+mRange*0.45,mSp=mRange/mT;
+  const mA=Math.max(mLow,mMo-mSp*0.55),mB=Math.min(mHigh,mMo+mSp*0.55);
+  const decOf=v=>{const d=Math.round(v*10)%10;return d<0?d+10:d;};
+  // integer-jump rule active only when effective range spans ≥2 full integers
+  const wCanJump=wB-wA>=2.0;
+  const mCanJump=mB-mA>=2.0;
+  const rW=[],rM=[],rWd=[],rMd=[];
   const rows=[];
   for(let i=0;i<numRows;i++){
-    let w=normalRandom(wMean,wStd);
-    for(let t=0;t<10&&w>=mat.maxWeight;t++)w=normalRandom(wMean,wStd);
-    const wRel=wRange>0?(w-wLow)/wRange:0.5;
-    let m;
-    if(wRel>0.7&&Math.random()<0.6)m=normalRandom(mat.optimum,mRange/(6*mT));
-    else m=normalRandom(mMean,mStd);
-    rows.push({weight:Math.round(w*10)/10,moisture:Math.round(m*10)/10});
+    let w,m,t=0;
+    for(;;){
+      w=Math.round(clampW(tri(wA,wB,wMo))*10)/10;if(++t>=60)break;
+      const close=rW.some(v=>Math.abs(v-w)<=0.1),dRep=rWd.some(d=>d===decOf(w));
+      if((close||dRep)&&Math.random()>0.01)continue;
+      // 75% chance of forcing integer jump ≥2 when range allows
+      if(wCanJump&&rW.length>0&&Math.abs(Math.floor(w)-Math.floor(rW[rW.length-1]))<=1&&Math.random()<0.75)continue;
+      break;
+    }
+    const wRel=(w-wLow)/wRange;
+    const mMoAdj=Math.max(mA,Math.min(mB,(wRel>0.65&&Math.random()<0.5)?mat.optimum:mMo));
+    t=0;
+    for(;;){
+      m=Math.round(clampM(tri(mA,mB,mMoAdj))*10)/10;if(++t>=60)break;
+      const close=rM.some(v=>Math.abs(v-m)<=0.1),dRep=rMd.some(d=>d===decOf(m));
+      if((close||dRep)&&Math.random()>0.01)continue;
+      if(mCanJump&&rM.length>0&&Math.abs(Math.floor(m)-Math.floor(rM[rM.length-1]))<=1&&Math.random()<0.75)continue;
+      break;
+    }
+    rW.push(w);if(rW.length>5)rW.shift();
+    rWd.push(decOf(w));if(rWd.length>4)rWd.shift();
+    rM.push(m);if(rM.length>5)rM.shift();
+    rMd.push(decOf(m));if(rMd.length>4)rMd.shift();
+    rows.push({weight:w,moisture:m});
   }
   return rows;
-}
-const NS='http://schemas.openxmlformats.org/spreadsheetml/2006/main';
-function getRowMap(doc){const map=new Map();for(const r of doc.getElementsByTagNameNS(NS,'row'))map.set(parseInt(r.getAttribute('r')),r);return map;}
-function findCell(row,ref){for(const c of row.getElementsByTagNameNS(NS,'c'))if(c.getAttribute('r')===ref)return c;return null;}
-function insertCellOrdered(row,cell,colNum){
-  const cells=row.getElementsByTagNameNS(NS,'c');
-  for(const ex of cells){const ec=colLetterToNum(ex.getAttribute('r').replace(/\d+$/,''));if(ec>colNum){row.insertBefore(cell,ex);return;}}
-  row.appendChild(cell);
-}
-function setNumericCell(doc,row,colNum,rowNum,val,sIdx){
-  const ref=cRef(colNum,rowNum);
-  let cell=findCell(row,ref);
-  if(!cell){cell=doc.createElementNS(NS,'c');cell.setAttribute('r',ref);insertCellOrdered(row,cell,colNum);}
-  cell.setAttribute('s',String(sIdx));cell.removeAttribute('t');
-  while(cell.firstChild)cell.removeChild(cell.firstChild);
-  const v=doc.createElementNS(NS,'v');v.textContent=String(val);cell.appendChild(v);
 }
 function shiftMergeRef(ref,off){return ref.split(':').map(p=>{const{col,row}=parseCRef(p);return cRef(col+off,row);}).join(':');}
 async function generateXlsx(mats,numRows,wT,mT){
   const bytes=Uint8Array.from(atob(TEMPLATE_B64),c=>c.charCodeAt(0));
   const zip=await JSZip.loadAsync(bytes);
-  const sheetXml=await zip.file('xl/worksheets/sheet1.xml').async('string');
-  const doc=new DOMParser().parseFromString(sheetXml,'text/xml');
-  const rowMap=getRowMap(doc);
+  zip.remove('xl/calcChain.xml');
+  let xml=await zip.file('xl/worksheets/sheet1.xml').async('string');
   const OFFSET=88;
   const activeNums=new Set(mats.map(m=>m.matNum));
-  const PARAM_COLS=[52,60,69,74,79,84];
+  function injectBeforeRowClose(rn,s){
+    const ri=xml.indexOf('<row r="'+rn+'"');if(ri===-1)return;
+    const re=xml.indexOf('</row>',ri);if(re===-1)return;
+    xml=xml.slice(0,re)+s+xml.slice(re);
+  }
+  function setCellVal(ref,val,s){
+    const v=String(val);
+    const nc='<c r="'+ref+'" s="'+s+'"><v>'+v+'</v></c>';
+    let r=new RegExp('<c r="'+ref+'"[^>]*>(?:<f>[^<]*</f>)?<v>[^<]*<\\/v><\\/c>');
+    if(r.test(xml)){xml=xml.replace(r,nc);return;}
+    r=new RegExp('<c r="'+ref+'"[^>]*\\/>');
+    if(r.test(xml)){xml=xml.replace(r,nc);return;}
+    const rn=parseInt(ref.match(/(\d+)$/)[1]);
+    injectBeforeRowClose(rn,nc);
+  }
+  function clearCellVal(ref){
+    xml=xml.replace(new RegExp('<c r="'+ref+'"([^>]*)>(?:<f>[^<]*<\\/f>)?<v>[^<]*<\\/v><\\/c>'),
+      function(m,a){return'<c r="'+ref+'"'+a+'/>';});
+  }
   for(const matN of[2,3]){
-    const rn=5+matN;const row=rowMap.get(rn);if(!row)continue;
     if(!activeNums.has(matN)){
-      for(const col of PARAM_COLS){
-        const ref=cRef(col,rn);const cell=findCell(row,ref);
-        if(cell){while(cell.firstChild)cell.removeChild(cell.firstChild);}
-      }
+      for(const col of[52,60,69,74,79,84])clearCellVal(cRef(col,5+matN));
     }
   }
   for(const mat of mats){
-    const rn=5+mat.matNum;const row=rowMap.get(rn);if(!row)continue;
-    setNumericCell(doc,row,52,rn,mat.optimum,18);
-    setNumericCell(doc,row,60,rn,mat.maxWeight,18);
-    setNumericCell(doc,row,69,rn,mat.moistLowOff,14);
-    setNumericCell(doc,row,74,rn,mat.moistHighOff,29);
-    setNumericCell(doc,row,79,rn,mat.compLow,14);
-    setNumericCell(doc,row,84,rn,mat.compHigh,14);
+    const rn=5+mat.matNum;
+    setCellVal(cRef(52,rn),mat.optimum,18);
+    setCellVal(cRef(60,rn),mat.maxWeight,18);
+    setCellVal(cRef(69,rn),mat.moistLowOff,14);
+    setCellVal(cRef(74,rn),mat.moistHighOff,29);
+    setCellVal(cRef(79,rn),mat.compLow,14);
+    setCellVal(cRef(84,rn),mat.compHigh,14);
   }
   const allData=mats.map(m=>generateData(m,numRows,wT,mT));
   for(let ri=0;ri<numRows;ri++){
-    const rn=18+ri;const row=rowMap.get(rn);if(!row)break;
-    setNumericCell(doc,row,64,rn,allData[0][ri].weight,18);
-    setNumericCell(doc,row,71,rn,allData[0][ri].moisture,18);
+    setCellVal(cRef(64,18+ri),allData[0][ri].weight,18);
+    setCellVal(cRef(71,18+ri),allData[0][ri].moisture,18);
   }
   for(let mi=1;mi<mats.length;mi++){
     const off=mi*OFFSET;const data=allData[mi];
-    const blCol=64+off;const bsCol=71+off;
-    for(let rn=13;rn<=17;rn++){
-      const row=rowMap.get(rn);if(!row)continue;
-      const cells=Array.from(row.getElementsByTagNameNS(NS,'c'));
-      for(const cell of cells){
-        const{col}=parseCRef(cell.getAttribute('r'));
-        if(col<1||col>88)continue;
-        const nc=cell.cloneNode(true);nc.setAttribute('r',cRef(col+off,rn));
-        insertCellOrdered(row,nc,col+off);
-      }
+    let s='<c r="'+cRef(1+off,13)+'" s="19" t="s"><v>32</v></c>';
+    for(let c=2;c<=88;c++)s+='<c r="'+cRef(c+off,13)+'" s="19"/>';
+    injectBeforeRowClose(13,s);
+    s='';for(let c=1;c<=88;c++)s+='<c r="'+cRef(c+off,14)+'" s="19"/>';
+    injectBeforeRowClose(14,s);
+    s='';
+    for(let c=1;c<=40;c++)s+='<c r="'+cRef(c+off,15)+'" s="25"/>';
+    for(let c=41;c<=45;c++)s+='<c r="'+cRef(c+off,15)+'" s="26"/>';
+    for(let c=46;c<=63;c++)s+='<c r="'+cRef(c+off,15)+'" s="25"/>';
+    s+='<c r="'+cRef(64+off,15)+'" s="25" t="s"><v>37</v></c>';
+    for(let c=65;c<=70;c++)s+='<c r="'+cRef(c+off,15)+'" s="25"/>';
+    s+='<c r="'+cRef(71+off,15)+'" s="25" t="s"><v>38</v></c>';
+    for(let c=72;c<=88;c++)s+='<c r="'+cRef(c+off,15)+'" s="25"/>';
+    injectBeforeRowClose(15,s);
+    for(const rn of[16,17]){
+      s='';for(let c=1;c<=88;c++)s+='<c r="'+cRef(c+off,rn)+'" s="25"/>';
+      injectBeforeRowClose(rn,s);
     }
-    const tmplRow=rowMap.get(18);if(!tmplRow)continue;
-    const tmplCells=Array.from(tmplRow.getElementsByTagNameNS(NS,'c'));
     for(let ri=0;ri<numRows;ri++){
-      const rn=18+ri;const row=rowMap.get(rn);if(!row)break;
-      for(const tc of tmplCells){
-        const{col}=parseCRef(tc.getAttribute('r'));
-        if(col<1||col>88)continue;
-        const newCol=col+off;
-        const nc=tc.cloneNode(true);nc.setAttribute('r',cRef(newCol,rn));
-        if(newCol===blCol){
-          nc.removeAttribute('t');while(nc.firstChild)nc.removeChild(nc.firstChild);
-          const v=doc.createElementNS(NS,'v');v.textContent=String(data[ri].weight);nc.appendChild(v);
-        }else if(newCol===bsCol){
-          nc.removeAttribute('t');while(nc.firstChild)nc.removeChild(nc.firstChild);
-          const v=doc.createElementNS(NS,'v');v.textContent=String(data[ri].moisture);nc.appendChild(v);
-        }else if(col!==77){
-          while(nc.firstChild)nc.removeChild(nc.firstChild);
-        }
-        insertCellOrdered(row,nc,newCol);
-      }
+      const rn=18+ri;s='';
+      const cc=(col,st,val,t)=>{
+        if(t==='str')return'<c r="'+cRef(col,rn)+'" s="'+st+'" t="str"><v>*</v></c>';
+        if(val!==undefined)return'<c r="'+cRef(col,rn)+'" s="'+st+'"><v>'+val+'</v></c>';
+        return'<c r="'+cRef(col,rn)+'" s="'+st+'"/>';
+      };
+      for(let c=1;c<=56;c++)s+=cc(c+off,14);
+      for(let c=57;c<=63;c++)s+=cc(c+off,24);
+      s+=cc(64+off,18,data[ri].weight);
+      for(let c=65;c<=70;c++)s+=cc(c+off,18);
+      s+=cc(71+off,18,data[ri].moisture);
+      for(let c=72;c<=75;c++)s+=cc(c+off,18);
+      s+=cc(76+off,23);s+=cc(77+off,22,'*','str');s+=cc(78+off,13);
+      for(let c=79;c<=85;c++)s+=cc(c+off,20);
+      s+=cc(86+off,21);s+=cc(87+off,22);s+=cc(88+off,13);
+      injectBeforeRowClose(rn,s);
     }
-    const mcEl=doc.getElementsByTagNameNS(NS,'mergeCells')[0];
-    if(!mcEl)continue;
-    const existing=Array.from(doc.getElementsByTagNameNS(NS,'mergeCell'));
-    const toAdd=[];
-    for(const mc of existing){
-      const ref=mc.getAttribute('ref');
-      const parts=ref.split(':');
-      const s=parseCRef(parts[0]);const e=parseCRef(parts[1]);
-      if(s.col>=1&&e.col<=88&&s.row>=13)toAdd.push(shiftMergeRef(ref,off));
+    const origMerges=[];
+    const mcRx=/<mergeCell ref="([^"]+)"/g;let mm;
+    while((mm=mcRx.exec(xml))!==null){
+      const parts=mm[1].split(':');
+      const sc=parseCRef(parts[0]);const ec=parseCRef(parts[1]);
+      if(sc.col>=1&&ec.col<=88&&sc.row>=13)origMerges.push(mm[1]);
     }
-    for(const ref of toAdd){const mc=doc.createElementNS(NS,'mergeCell');mc.setAttribute('ref',ref);mcEl.appendChild(mc);}
-    mcEl.setAttribute('count',String(mcEl.getElementsByTagNameNS(NS,'mergeCell').length));
+    xml=xml.replace('</mergeCells>',origMerges.map(r=>'<mergeCell ref="'+shiftMergeRef(r,off)+'"/>').join('')+'</mergeCells>');
+    const total=(xml.match(/<mergeCell /g)||[]).length;
+    xml=xml.replace(/(<mergeCells count=")[^"]*(")/,'$1'+total+'$2');
   }
-  const newXml=new XMLSerializer().serializeToString(doc);
-  zip.file('xl/worksheets/sheet1.xml',newXml);
+  zip.file('xl/worksheets/sheet1.xml',xml);
   return await zip.generateAsync({type:'uint8array',compression:'DEFLATE',compressionOptions:{level:6}});
 }
 function getMats(){
@@ -249,14 +286,14 @@ function getMats(){
   return mats;
 }
 function validate(mats,numRows){
-  if(!mats.length)return'Select at least one material.';
-  if(isNaN(numRows)||numRows<1||numRows>363)return'Rows must be 1-363.';
+  if(!mats.length)return'Seleccione al menos un material.';
+  if(isNaN(numRows)||numRows<1||numRows>363)return'El número de filas debe estar entre 1 y 363.';
   for(let i=0;i<mats.length;i++){
     const m=mats[i];const n=i+1;
-    if(isNaN(m.optimum)||isNaN(m.maxWeight))return'Mat. '+n+': Enter Optimum Moisture and Max Weight.';
-    if(isNaN(m.moistLowOff)||m.moistLowOff>=0)return'Mat. '+n+': Moisture Lower offset must be a positive number.';
-    if(isNaN(m.moistHighOff)||m.moistHighOff<=0)return'Mat. '+n+': Moisture Upper offset must be a positive number.';
-    if(m.compLow<=0||m.compLow>=m.compHigh)return'Mat. '+n+': Compaction Lower must be > 0 and < Upper.';
+    if(isNaN(m.optimum)||isNaN(m.maxWeight))return'Mat. '+n+': Ingrese la Humedad Óptima y el Densidad Seca Máxima.';
+    if(isNaN(m.moistLowOff)||m.moistLowOff>=0)return'Mat. '+n+': El límite inferior de humedad debe ser un número positivo.';
+    if(isNaN(m.moistHighOff)||m.moistHighOff<=0)return'Mat. '+n+': El límite superior de humedad debe ser un número positivo.';
+    if(m.compLow<=0||m.compLow>=m.compHigh)return'Mat. '+n+': El límite inferior de compactación debe ser > 0 y menor que el superior.';
   }
   return null;
 }
@@ -267,7 +304,7 @@ async function handleGenerate(){
   const numRows=parseInt(document.getElementById('numRows').value);
   const err=validate(mats,numRows);
   if(err){status.innerHTML='<span class="error">'+err+'</span>';return;}
-  btn.disabled=true;status.innerHTML='Generating...';
+  btn.disabled=true;status.innerHTML='Generando...';
   try{
     const wT=parseFloat(document.getElementById('wTightness').value);
     const mT=parseFloat(document.getElementById('mTightness').value);
@@ -276,7 +313,7 @@ async function handleGenerate(){
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');a.href=url;a.download='field_test_data.xlsx';a.click();
     URL.revokeObjectURL(url);
-    status.innerHTML='<span class="success">Done! Downloaded '+numRows+' rows for '+mats.length+' material'+(mats.length>1?'s':'')+'.</span>';
+    status.innerHTML='<span class="success">¡Listo! Descargadas '+numRows+' filas para '+mats.length+' material'+(mats.length>1?'es':'')+'.</span>';
   }catch(e){
     status.innerHTML='<span class="error">Error: '+e.message+'</span>';console.error(e);
   }
